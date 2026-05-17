@@ -1,0 +1,33 @@
+﻿MeuProjetoFaturas/
+│
+├── 📁 Endpoints/             # Controladores (Controllers) ou Minimal APIs
+│   └── FaturaEndpoint.cs     # Recebe as requisições HTTP (Ex: Iniciar processamento)
+│
+├── 📁 Services/              # Regras de Negócio e Orquestração
+│   ├── FaturaService.cs      # Orquestra o fluxo (Chama S3 -> Chama Parser -> Chama Repo)
+│   └── 📁 Interfaces/
+│       └── IFaturaService.cs
+│
+├── 📁 Parsers/               # Transformação de dados puros/brutos em objetos de negócio
+│   ├── FaturaInterParser.cs  # Contém a lógica do iText7 e as Regex
+│   └── 📁 Helpers/
+│       └── DateTimeHelper.cs # Seu método NowLocal() e conversores de data/valor
+│
+├── 📁 Repositories/          # Acesso ao Banco de Dados (Data Access)
+│   ├── FaturaRepository.cs   # Salva os dados extraídos no banco (SQL, NoSQL, etc)
+│   └── 📁 Interfaces/
+│       └── IFaturaRepository.cs
+│
+├── 📁 Infrastructure/        # Comunicação com serviços externos / Terceiros
+│   ├── S3StorageService.cs   # A classe que criamos para buscar o stream no S3
+│   └── 📁 Interfaces/
+│       └── IS3StorageService.cs
+│
+├── 📁 Models/                # Entidades do Banco e Objetos de Transferência (DTOs)
+│   ├── 📁 Entities/
+│   │   └── TransacaoEntity.cs# Como a transação é salva no banco de dados
+│   └── 📁 Dtos/
+│       └── TransacaoDto.cs   # O objeto temporário gerado no Parser
+│
+├── Program.cs                # Configuração da Injeção de Dependência e Middlewares
+└── appsettings.json          # Configurações de conexão (AWS, Banco de Dados)

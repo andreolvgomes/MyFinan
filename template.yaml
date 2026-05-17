@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Globals:
+    Function:
+        Timeout: 30
+        MemorySize: 512
+        Architectures: [arm64]
+        Tracing: Active
+        Runtime: dotnet8
+        Environment:
+            Variables:
+                CONNECTION_STRING: "{{resolve:ssm:/CONNECTION_STRING}}"
+
+Resources:
+    ApiFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            Runtime: dotnet8
+            CodeUri: ./MyFinan/
+            Handler: MyFinan
+            MemorySize: 512
+            Timeout: 30
+            Events:
+                Api:
+                    Type: Api
+                    Properties:
+                        Path: /{proxy+}
+                        Method: ANY
+            Policies:
+                - AmazonDynamoDBFullAccess
+                - AmazonS3FullAccess

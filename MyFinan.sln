@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36414.22 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyFinan", "MyFinan\MyFinan.csproj", "{8CE8035B-4EFB-53C7-41B9-46852D9195B9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		help.txt = help.txt
+		samconfig.toml = samconfig.toml
+		template.yaml = template.yaml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DapperExtensions", "DapperExtensions\DapperExtensions.csproj", "{54188D71-F5AB-4E79-BA45-F4CE9FF76518}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8CE8035B-4EFB-53C7-41B9-46852D9195B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CE8035B-4EFB-53C7-41B9-46852D9195B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CE8035B-4EFB-53C7-41B9-46852D9195B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CE8035B-4EFB-53C7-41B9-46852D9195B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54188D71-F5AB-4E79-BA45-F4CE9FF76518}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54188D71-F5AB-4E79-BA45-F4CE9FF76518}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54188D71-F5AB-4E79-BA45-F4CE9FF76518}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54188D71-F5AB-4E79-BA45-F4CE9FF76518}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {859E3142-9D60-4072-87AC-350BF4AC3404}
+	EndGlobalSection
+EndGlobal
