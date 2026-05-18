@@ -1,4 +1,5 @@
-﻿using Amazon.Runtime.CredentialManagement;
+﻿using Amazon;
+using Amazon.Runtime.CredentialManagement;
 using Amazon.S3;
 using MyFinan.Infrastructure;
 using MyFinan.Parsers;
@@ -30,7 +31,11 @@ namespace MyFinan
             var chain = new CredentialProfileStoreChain();
             if (chain.TryGetAWSCredentials("taskhere", out var credentials))
             {
-                var s3 = new AmazonS3Client(credentials);
+                var s3Config = new AmazonS3Config
+                {
+                    RegionEndpoint = RegionEndpoint.SAEast1 // Altere para a região correta do seu S3 (ex: USEast1, SAEast1, etc.)
+                };
+                var s3 = new AmazonS3Client(credentials, s3Config);
                 services.AddSingleton<IAmazonS3>(s3);
             }
 #else
