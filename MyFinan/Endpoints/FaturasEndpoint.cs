@@ -1,5 +1,6 @@
 ﻿using FastEndpoints;
 using Microsoft.AspNetCore.Authorization;
+using MyFinan.Models.Entities;
 using MyFinan.Repositories;
 using MyFinan.Services;
 
@@ -53,6 +54,24 @@ namespace MyFinan.Endpoints
         public override async Task HandleAsync(CancellationToken ct)
         {
             await Send.OkAsync(await _transacoesRepository.AgruparPorBeneficiario());
+        }
+    }
+
+    [AllowAnonymous]
+    [HttpPut("faturas/{id}")]
+    public class FaturasUpdateEndpoint : Endpoint<Transacoes>
+    {
+        private readonly ITransacoesRepository _transacoesRepository;
+
+        public FaturasUpdateEndpoint(ITransacoesRepository transacoesRepository)
+        {
+            _transacoesRepository = transacoesRepository;
+        }
+
+        public override async Task HandleAsync(Transacoes req, CancellationToken ct)
+        {
+            await _transacoesRepository.Update(req);
+            await Send.OkAsync();
         }
     }
 }

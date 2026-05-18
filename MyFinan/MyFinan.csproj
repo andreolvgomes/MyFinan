@@ -21,9 +21,6 @@
     <PackageReference Include="Npgsql" Version="10.0.2" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Queries\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\DapperExtensions\DapperExtensions.csproj" />
   </ItemGroup>
 </Project>

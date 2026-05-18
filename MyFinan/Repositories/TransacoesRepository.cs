@@ -72,9 +72,11 @@ namespace MyFinan.Repositories
             var sql = @"
 select 
     coalesce(categorias.nome, '') as Categoria,
+    coalesce(categorias.cor, '') as Cor,
     transacoes.*
 from myfinan.transacoes transacoes
-left join myfinan.categorias categorias on transacoes.categoria_id = categorias.id";
+left join myfinan.categorias categorias on transacoes.categoria_id = categorias.id
+order by transacoes.id";
 
             return await _connection.QueryAsync(sql);
         }

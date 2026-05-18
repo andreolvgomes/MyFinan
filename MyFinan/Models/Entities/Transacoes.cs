@@ -21,5 +21,6 @@ namespace MyFinan.Models.Entities
         public int Id { get; set; }
         public string Nome { get; set; }
         public string Nome_Contains { get; set; }
+        public string Cor { get; set; }
     }
 }
