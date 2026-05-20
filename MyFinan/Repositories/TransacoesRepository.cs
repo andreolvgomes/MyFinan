@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using DapperExtensions;
 using MyFinan.Models.Entities;
+using System.Collections;
 using System.Data;
 
 namespace MyFinan.Repositories
@@ -36,6 +37,7 @@ namespace MyFinan.Repositories
         Task<IEnumerable<Transacoes>> GetAll();
         Task<IEnumerable<dynamic>> AgruparPorBeneficiario();
         Task<IEnumerable<object>> ObterTodos();
+        Task<IEnumerable<object>> Dash();
     }
 
     public class TransacoesRepository : ITransacoesRepository
@@ -80,7 +82,7 @@ order by transacoes.id";
 
             return await _connection.QueryAsync(sql);
         }
-        
+
         public async Task<IEnumerable<Transacoes>> GetAll()
         {
             return await _connection.GetAllAsync<Transacoes>();
@@ -90,6 +92,20 @@ order by transacoes.id";
         {
             var result = await _connection.QueryAsync("select beneficiario, sum(valor) from myfinan.transacoes\r\ngroup by beneficiario");
             return result;
+        }
+
+        public async Task<IEnumerable<object>> Dash()
+        {
+            var sql = @"
+select 
+    coalesce(categorias.nome, 'Sem categoria') as Categoria,
+    coalesce(categorias.cor, '#94A3B8') as Cor,
+    sum(transacoes.valor) as Valor
+from myfinan.transacoes transacoes
+left join myfinan.categorias categorias on transacoes.categoria_id = categorias.id
+group by categorias.nome, categorias.cor";
+
+            return await _connection.QueryAsync(sql);
         }
     }
 }
