@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using DapperExtensions;
+using MyFinan.Models.Dtos;
 using MyFinan.Models.Entities;
 using System.Collections;
 using System.Data;
@@ -33,11 +34,12 @@ namespace MyFinan.Repositories
         Task Insert(Transacoes transacoes);
         Task Update(Transacoes transacoes);
         Task<Transacoes> GetById(long id);
-        Task Delete(Transacoes transacoes);
+        Task Delete(long id);
         Task<IEnumerable<Transacoes>> GetAll();
         Task<IEnumerable<dynamic>> AgruparPorBeneficiario();
         Task<IEnumerable<object>> ObterTodos();
-        Task<IEnumerable<object>> Dash();
+
+        Task<IEnumerable<DashResponse>> Dash();
     }
 
     public class TransacoesRepository : ITransacoesRepository
@@ -64,9 +66,9 @@ namespace MyFinan.Repositories
             return await _connection.FindAsync<Transacoes>(id);
         }
 
-        public async Task Delete(Transacoes transacoes)
+        public async Task Delete(long id)
         {
-            await _connection.DeleteAsync(transacoes);
+            await _connection.ExecuteAsync("delete from myfinan.transacoes where id = @id", new { id });
         }
 
         public async Task<IEnumerable<object>> ObterTodos()
@@ -94,18 +96,17 @@ order by transacoes.id";
             return result;
         }
 
-        public async Task<IEnumerable<object>> Dash()
+        public async Task<IEnumerable<DashResponse>> Dash()
         {
             var sql = @"
 select 
     coalesce(categorias.nome, 'Sem categoria') as Categoria,
-    coalesce(categorias.cor, '#94A3B8') as Cor,
     sum(transacoes.valor) as Valor
 from myfinan.transacoes transacoes
 left join myfinan.categorias categorias on transacoes.categoria_id = categorias.id
 group by categorias.nome, categorias.cor";
 
-            return await _connection.QueryAsync(sql);
+            return await _connection.QueryAsync<DashResponse>(sql);
         }
     }
 }

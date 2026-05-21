@@ -17,6 +17,21 @@ public class DashEndpoint : EndpointWithoutRequest
 
     public async override Task HandleAsync(CancellationToken ct)
     {
-        await Send.OkAsync(await _transacoesRepository.Dash());
+        var result = await _transacoesRepository.Dash();
+        var totalGastos = result.Sum(s => s.Valor);
+
+        var dto = new
+        {
+            dados = result,
+            total = totalGastos,
+            percentuais = result.Select(s => new
+            {
+                s.Categoria,
+                percentual = (result.Where(c => c.Categoria == s.Categoria)
+                                    .Sum(sum => sum.Valor) / totalGastos) * 100
+            })
+        };
+
+        await Send.OkAsync(dto);
     }
 }

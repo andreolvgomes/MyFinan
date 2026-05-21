@@ -74,4 +74,23 @@ namespace MyFinan.Endpoints
             await Send.OkAsync();
         }
     }
+
+    [AllowAnonymous]
+    [HttpDelete("faturas/{id}")]
+    public class FaturasDeleteEndpoint : Endpoint<Transacoes>
+    {
+        private readonly ITransacoesRepository _transacoesRepository;
+
+        public FaturasDeleteEndpoint(ITransacoesRepository transacoesRepository)
+        {
+            _transacoesRepository = transacoesRepository;
+        }
+
+        public override async Task HandleAsync(Transacoes req, CancellationToken ct)
+        {
+            var id = Route<long>("id");
+            await _transacoesRepository.Delete(id);
+            await Send.OkAsync();
+        }
+    }
 }
