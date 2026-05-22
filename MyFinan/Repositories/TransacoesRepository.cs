@@ -101,10 +101,11 @@ order by transacoes.id";
             var sql = @"
 select 
     coalesce(categorias.nome, 'Sem categoria') as Categoria,
-    sum(transacoes.valor) as Valor
+    sum(abs(transacoes.valor)) as Total,
+    count(1) as Count
 from myfinan.transacoes transacoes
 left join myfinan.categorias categorias on transacoes.categoria_id = categorias.id
-group by categorias.nome, categorias.cor";
+group by categorias.nome";
 
             return await _connection.QueryAsync<DashResponse>(sql);
         }
