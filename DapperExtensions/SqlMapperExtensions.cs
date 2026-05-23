@@ -153,7 +153,7 @@ namespace DapperExtensions
         public static TableNameMapperDelegate TableNameMapper;
 #pragma warning restore CA2211 // Non-constant fields should not be visible
 
-        private static string GetTableName(Type type)
+        public static string GetTableName(Type type)
         {
             if (TypeTableName.TryGetValue(type.TypeHandle, out string name)) return name;
 
