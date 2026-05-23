@@ -25,10 +25,10 @@ namespace DapperExtensions
                 i++;
             }
 
-            var properties = param.GetType().GetProperties();
+            //var properties = param.GetType().GetProperties();
             var dynParams = new DynamicParameters();
 
-            foreach (PropertyInfo property in properties)
+            foreach (PropertyInfo property in propertiesparam)
                 dynParams.Add($"@{property.Name.ToLower()}", property.GetValue(param, null));
 
             if (!type.IsInterface)
@@ -70,26 +70,44 @@ namespace DapperExtensions
         /// <param name="transaction">The transaction to run under, null (the default) if none</param>
         /// <param name="commandTimeout">Number of seconds before command execution timeout</param>
         /// <returns>Entity of T</returns>
-        public static Task<IEnumerable<T>> GetAllAsync<T>(this IDbConnection connection, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        public static Task<IEnumerable<T>> GetAllAsync<T>(this IDbConnection connection, dynamic param = null, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
         {
             var type = typeof(T);
             var cacheType = typeof(List<T>);
 
-            //GetSingleKey<T>(nameof(GetAll));
             var name = GetTableName(type);
 
             var sql = "SELECT * FROM " + name;
 
-            if (!type.IsInterface)
+            var dynParams = new DynamicParameters();
+            var propertiesparam = param.GetType().GetProperties();
+
+            if (param != null)
             {
-                return connection.QueryAsync<T>(sql, null, transaction, commandTimeout);
+                sql += " where ";
+
+                var i = 0;
+                foreach (var property in propertiesparam)
+                {
+                    if (i > 0)
+                        sql += " and ";
+
+                    sql += $"{property.Name} = @{property.Name}";
+                    i++;
+                }
+                
+                foreach (PropertyInfo property in propertiesparam)
+                    dynParams.Add($"@{property.Name.ToLower()}", property.GetValue(param, null));
             }
-            return GetAllAsyncImpl<T>(connection, transaction, commandTimeout, sql, type);
+            
+            if (!type.IsInterface)
+                return connection.QueryAsync<T>(sql, dynParams, transaction, commandTimeout);
+            return GetAllAsyncImpl<T>(connection, sql, type, dynParams, transaction, commandTimeout);
         }
 
-        private static async Task<IEnumerable<T>> GetAllAsyncImpl<T>(IDbConnection connection, IDbTransaction transaction, int? commandTimeout, string sql, Type type) where T : class
+        private static async Task<IEnumerable<T>> GetAllAsyncImpl<T>(IDbConnection connection, string sql, Type type, object param = null, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
         {
-            var result = await connection.QueryAsync(sql, transaction: transaction, commandTimeout: commandTimeout).ConfigureAwait(false);
+            var result = await connection.QueryAsync(sql, param, transaction: transaction, commandTimeout: commandTimeout).ConfigureAwait(false);
             var list = new List<T>();
             foreach (IDictionary<string, object> res in result)
             {

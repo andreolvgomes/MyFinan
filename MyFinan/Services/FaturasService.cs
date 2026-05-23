@@ -18,7 +18,7 @@ namespace MyFinan.Services
             ITransacoesRepository transacoesRepository,
             ICategoriasRepository categoriasRepository)
         {
-            _storageService = storageService;
+            _storageService = storageService;g
             _faturaInterParser = faturaInterParser;
             _transacoesRepository = transacoesRepository;
             _categoriasRepository = categoriasRepository;
