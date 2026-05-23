@@ -80,10 +80,10 @@ namespace DapperExtensions
             var sql = "SELECT * FROM " + name;
 
             var dynParams = new DynamicParameters();
-            var propertiesparam = param.GetType().GetProperties();
 
             if (param != null)
             {
+                var propertiesparam = param.GetType().GetProperties();
                 sql += " where ";
 
                 var i = 0;
@@ -95,17 +95,17 @@ namespace DapperExtensions
                     sql += $"{property.Name} = @{property.Name}";
                     i++;
                 }
-                
+
                 foreach (PropertyInfo property in propertiesparam)
                     dynParams.Add($"@{property.Name.ToLower()}", property.GetValue(param, null));
             }
-            
+
             if (!type.IsInterface)
                 return connection.QueryAsync<T>(sql, dynParams, transaction, commandTimeout);
             return GetAllAsyncImpl<T>(connection, sql, type, dynParams, transaction, commandTimeout);
         }
 
-        private static async Task<IEnumerable<T>> GetAllAsyncImpl<T>(IDbConnection connection, string sql, Type type, object param = null, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        private static async Task<IEnumerable<T>> GetAllAsyncImpl<T>(IDbConnection connection, string sql, Type type, DynamicParameters param = null, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
         {
             var result = await connection.QueryAsync(sql, param, transaction: transaction, commandTimeout: commandTimeout).ConfigureAwait(false);
             var list = new List<T>();
