@@ -323,7 +323,7 @@ namespace DapperExtensions
             for (var i = 0; i < allKeyProperties.Count; i++)
             {
                 var property = allKeyProperties[i];
-                adapter.AppendColumnNameEqualsValue(sb, property.Name);
+                adapter.AppendColumnNameEqualsValue(sb, property.Name.ToLower());
                 if (i < allKeyProperties.Count - 1)
                     sb.Append(" AND ");
             }
